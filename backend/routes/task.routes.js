@@ -2,11 +2,11 @@ import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware";
 import { createTask,getTask,getAllTasks,updateTask,deleteTask } from "../controllers/task.controller";
 
-const router = Router()
+const taskRouter = Router()
 
-router.use(verifyJWT) //Protect all task routes
+taskRouter.use(verifyJWT) //Protect all task routes
 
-router.route("/").post(createTask).get(getAllTasks)
-router.route("/:taskID").get(getTask).patch(updateTask).delete(deleteTask)
+taskRouter.route("/").post(createTask).get(getAllTasks)
+taskRouter.route("/:taskID").get(getTask).patch(updateTask).delete(deleteTask)
 
-export default router
+export default taskRouter
