@@ -1,5 +1,5 @@
 import mongoose,{Schema} from "mongoose";
-import { User } from "./user.model";
+import { User } from "./user.model.js";
 
 const taskSchema = new Schema({
     userId:{

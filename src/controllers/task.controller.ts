@@ -1,9 +1,10 @@
-import { Task } from "../models/task.model";
-import { asyncHandler } from "../utils/asyncHandler";
-import {apiResponse} from "../utils/apiResponse"
+import type { Request, Response } from "express";
+import { Task } from "../models/task.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import {apiResponse} from "../utils/apiResponse.js"
 
 //create task
-export const createTask = asyncHandler(async(req,res)=>{
+export const createTask = asyncHandler(async(req:Request,res:Response)=>{
     const {content} = req.body
     if (!content) {
         throw new Error("Content is required")
@@ -18,7 +19,7 @@ export const createTask = asyncHandler(async(req,res)=>{
 
 })
 //get task
-export const getTask = asyncHandler(async(req,res)=>{
+export const getTask = asyncHandler(async(req:Request,res:Response)=>{
     const {taskID} = req.params
 
     const task = await Task.findOne({
@@ -31,7 +32,7 @@ export const getTask = asyncHandler(async(req,res)=>{
     return res.status(200).json(new apiResponse(200,task,"Task retrived successfully"))
 })
 //get all tasks
-export const getAllTasks = asyncHandler(async(req,res)=>{
+export const getAllTasks = asyncHandler(async(req:Request,res:Response)=>{
     const task = await Task.find({
         userId: req.user._id
     })
@@ -39,7 +40,7 @@ export const getAllTasks = asyncHandler(async(req,res)=>{
     return res.status(200).json(new apiResponse(200,task,"All tasks have been retrieved successfully"))
 })
 //update task
-export const updateTask = asyncHandler(async(req,res)=>{
+export const updateTask = asyncHandler(async(req:Request,res:Response)=>{
     const {taskID} = req.params
     const {content}= req.body
     const task = await Task.findOneAndUpdate({
@@ -63,7 +64,7 @@ if (!task) {
 return res.status(200).json(new apiResponse(200,task,"Task updated successfully"))
 })
 //delete task
-export const deleteTask = asyncHandler(async(req,res)=>{
+export const deleteTask = asyncHandler(async(req:Request,res: Response)=>{
     const {taskID} = req.params
 
     const task = await Task.findByIdAndDelete({

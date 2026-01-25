@@ -1,11 +1,12 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { apiResponse } from "../utils/apiResponse";
-import { User } from "../models/user.model";
+import type { Request, Response } from "express";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { apiResponse } from "../utils/apiResponse.js";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
 //signup
-export const signup = asyncHandler(async(req,res)=>{
+export const signup = asyncHandler(async(req:Request,res:Response)=>{
    const {name,email,password} = req.body;
    if (!name || !email || !password) {
     throw new Error("Please provide all required fields")
@@ -27,7 +28,7 @@ export const signup = asyncHandler(async(req,res)=>{
    }
 })
 //login 
-export const login = asyncHandler(async(req,res)=>{
+export const login = asyncHandler(async(req:Request,res:Response)=>{
     const {email,password} = req.body;
     if (!email || !password) {
         throw new Error("Please provide all required fields")
