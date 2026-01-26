@@ -1,9 +1,10 @@
-import express from "express"
+import express,{type Application} from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import taskRouter from "./routes/task.routes"
+import taskRouter from "./routes/task.routes.js"
 
-const app =express()
+
+const app:Application =express()
 
 app.use(
     cors({

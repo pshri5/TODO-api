@@ -1,8 +1,9 @@
-import {asyncHandler} from "../utils/asyncHandler"
+import type { Request, Response, NextFunction } from "express"
+import {asyncHandler} from "../utils/asyncHandler.js"
 import jwt from "jsonwebtoken"
-import {User} from "../models/user.model"
+import {User} from "../models/user.model.js"
 
-export const verifyJWT = asyncHandler(async(req,res,next)=>{
+export const verifyJWT = asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const token = req.token?.accessToken || req.header("Authorization");
         if (!token) {
@@ -20,7 +21,7 @@ export const verifyJWT = asyncHandler(async(req,res,next)=>{
         next();
 
 
-    } catch (error) {
+    } catch (error:any) {
         throw new error("Invalid Access Token")
     }
 })
