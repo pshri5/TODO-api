@@ -1,4 +1,5 @@
 import mongoose,{Schema} from "mongoose";
+import { TodoStatus } from "../types/todo.ts";
 
 
 const todoSchema:Schema = new Schema({
@@ -14,8 +15,9 @@ const todoSchema:Schema = new Schema({
     },
     status:{
         type: String,
-        enum:["Pending","In Progress","Completed"],
-        default: "Pending"
+        required: [true,"Status is required"],
+        enum: Object.values(TodoStatus),
+        default: TodoStatus.PENDING
     }
 },{timestamps:true})
 
