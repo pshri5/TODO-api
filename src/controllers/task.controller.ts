@@ -1,80 +1,92 @@
 import type { Request, Response } from "express";
-import { Task } from "../models/task.model.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import {apiResponse} from "../utils/apiResponse.js"
+import { Todo } from "../models/todos.model.ts";
+import type { TodoResponse, ITodoDocument, Itodo } from "../types/todo.ts";
 
-//create task
-export const createTask = asyncHandler(async(req:Request,res:Response)=>{
-    const {content} = req.body
-    if (!content) {
-        throw new Error("Content is required")
+//get todo
+const getAllTodos = async(req:Request,res:Response):Promise<void> =>{
+    try {
+       const todo = await Todo.find()
+       res.status(200).json({
+        success: true,
+        data: todo,
+        message: "Todos fetched successfully"
+       }) 
+    } catch (error) {
+       res.status(500).json({
+        success: false,
+        data: null,
+        message:"Error fetching todos"
+       }) 
     }
-
-    const task = await Task.create({
-        content,
-        userId: req.user._id
-    })
-
-    return res.status(200).json(new apiResponse(200,task,"Task created Successfully"))
-
-})
-//get task
-export const getTask = asyncHandler(async(req:Request,res:Response)=>{
-    const {taskID} = req.params
-
-    const task = await Task.findOne({
-        _id: taskID,
-        userId: req.user._id
-    })
-    if (!task) {
-        throw new Error("Task not found")
-    }
-    return res.status(200).json(new apiResponse(200,task,"Task retrived successfully"))
-})
-//get all tasks
-export const getAllTasks = asyncHandler(async(req:Request,res:Response)=>{
-    const task = await Task.find({
-        userId: req.user._id
-    })
-
-    return res.status(200).json(new apiResponse(200,task,"All tasks have been retrieved successfully"))
-})
-//update task
-export const updateTask = asyncHandler(async(req:Request,res:Response)=>{
-    const {taskID} = req.params
-    const {content}= req.body
-    const task = await Task.findOneAndUpdate({
-        _id: taskID,
-        userId: req.user._id
-    },
-    {
-        $set:{
-            content
-        }
-
-    },
-    {
-        new:true
-
-    }
-)
-if (!task) {
-    throw new Error("Task not found")
 }
-return res.status(200).json(new apiResponse(200,task,"Task updated successfully"))
-})
-//delete task
-export const deleteTask = asyncHandler(async(req:Request,res: Response)=>{
-    const {taskID} = req.params
+const getTodo = async(req:Request<{id : String }>,res:Response):Promise<void> =>{
+try {
+    const todo  = await Todo.findById(req.params.id)
+    res.status(200).json({
+        success: true,
+        data: todo,
+        message: "Todo retrieved successfully"
+    })
+} catch (error) {
+    res.status(500).json({
+        success: false,
+        data: null,
+        message:"Error fetching todo"
+    })
+}
+}
+//create todo
+const createTodo = async(req:Request,res:Response):Promise<void> =>{
+try {
+    const newTodo = await Todo.create(req.body)
+    res.status(200).json({
+        success: true,
+        data: newTodo,
+        message: "Todo created successfully",
+    })
+   
 
-    const task = await Task.findByIdAndDelete({
-        _id: taskID,
-        userId: req.user._id
+} catch (error) {
+    res.status(500).json({
+        success: false,
+        data: null,
+        message: "Error creating todo"
+    })
+}
+}
+//update todo
+const updateTodo = async(req:Request,res:Response):Promise<void> =>{
+try {
+    const updatedTodo = await Todo.findByIdAndUpdate(req.params.id,req.body,{
+        new: true
+    })
+    res.status(200).json({
+        success: true,
+        data: updatedTodo,
+        message:"Todo updated successfully"
     })
 
-    if (!task) {
-        throw new Error("Task not found")
-    }
-    return res.status(200).json(new apiResponse(200,{},"Task Deleted Successfully")
-    )
-})
+    
+} catch (error) {
+    res.status(500).json({
+        success: false,
+        message: "Error updating todo"
+    })
+}
+}
+//delete todo
+const deleteTodo = async(req:Request,res:Response): Promise<void> =>{
+try {
+   const deletedTodo = await Todo.findByIdAndDelete(req.params.id)
+   res.status(200).json({
+    success: true,
+    data: null,
+    message:"Todo deleted successfully"
+   }) 
+} catch (error) {
+    res.status(500).json({
+        success: false,
+        message: "Error deleting todo"
+    })
+}
+}
