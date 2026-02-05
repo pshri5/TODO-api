@@ -19,5 +19,6 @@ export interface ITodoDocument extends Itodo{
 
 export interface TodoResponse{
     success: Boolean,
-    data: ITodoDocument | ITodoDocument[] | null
+    data: Itodo | ITodoDocument | ITodoDocument[] | null,
+    message: String
 }
