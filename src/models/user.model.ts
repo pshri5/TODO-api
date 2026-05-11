@@ -1,4 +1,6 @@
+import type { NextFunction } from "express";
 import mongoose, {Schema} from "mongoose";
+import bcrypt from "bcrypt"
 
 const userSchema:Schema = new Schema({
     username:{
@@ -18,4 +20,11 @@ const userSchema:Schema = new Schema({
 },{timestamps:true})
 
 
-export const User = mongoose.model("User",userSchema)
+export const User = mongoose.model("User", userSchema)
+
+userSchema.pre("save", async function (next:NextFunction) {
+    if(!this.isModified("password")) return next()
+    
+    const hashedPassword = await bcrypt.hash(this.password, 10)
+    
+})
